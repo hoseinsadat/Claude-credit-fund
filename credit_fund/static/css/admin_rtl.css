@@ -1,0 +1,15 @@
+/* Additional RTL fixes for Unfold admin */
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('/static/fonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('/static/fonts/Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: bold;
+}
+
+body {
+    font-family: 'Vazirmatn', Tahoma, Arial, sans-serif !important;
+}

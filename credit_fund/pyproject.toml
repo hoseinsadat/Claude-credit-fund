@@ -1,0 +1,17 @@
+[project]
+name = "credit-fund"
+version = "0.1.0"
+description = "Credit Institute Guarantee Management System"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.dev"
+python_files = ["tests.py", "test_*.py"]
+python_paths = ["."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
