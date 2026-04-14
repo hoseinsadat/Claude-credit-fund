@@ -1,0 +1,59 @@
+{% extends "portal/base.html" %}
+{% load persian_tags %}
+
+{% block title %}داشبورد{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">داشبورد</h4>
+
+{% if client %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card card-stat p-3">
+            <div class="text-muted mb-1">ضمانت‌نامه‌های فعال</div>
+            <div class="value text-primary">{{ active_guarantees_count|to_persian }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3">
+            <div class="text-muted mb-1">مجموع تعهدات</div>
+            <div class="value text-success">{{ total_exposure|rials_format }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3">
+            <div class="text-muted mb-1">درخواست‌های در انتظار</div>
+            <div class="value text-warning">{{ pending_requests|to_persian }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3">
+            <div class="text-muted mb-1">هزینه‌های پرداخت‌نشده</div>
+            <div class="value text-danger">{{ pending_fees|rials_format }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6>اطلاعات اعتباری</h6>
+            <table class="table table-sm">
+                <tr><td>سقف اعتبار</td><td>{{ client.credit_limit|rials_format }}</td></tr>
+                <tr><td>اعتبار مصرف شده</td><td>{{ client.used_credit|rials_format }}</td></tr>
+                <tr><td>اعتبار موجود</td><td>{{ client.available_credit|rials_format }}</td></tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6>اقدامات سریع</h6>
+            <a href="{% url 'portal:request-create' %}" class="btn btn-primary mb-2 w-100">درخواست ضمانت‌نامه جدید</a>
+            <a href="{% url 'portal:guarantee-list' %}" class="btn btn-outline-primary w-100">مشاهده ضمانت‌نامه‌ها</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-warning">پروفایل مشتری شما تنظیم نشده است. لطفاً با پشتیبانی تماس بگیرید.</div>
+{% endif %}
+{% endblock %}

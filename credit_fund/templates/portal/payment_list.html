@@ -1,0 +1,49 @@
+{% extends "portal/base.html" %}
+{% load persian_tags %}
+
+{% block title %}پرداخت‌ها{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">تاریخچه پرداخت‌ها</h4>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>نوع پرداخت</th>
+                    <th>مبلغ</th>
+                    <th>روش</th>
+                    <th>شماره مرجع</th>
+                    <th>تاریخ</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.get_payment_type_display }}</td>
+                    <td>{{ p.amount|rials_format }}</td>
+                    <td>{{ p.get_payment_method_display }}</td>
+                    <td>{{ p.reference_number|default:"-" }}</td>
+                    <td>{{ p.payment_date|to_jalali }}</td>
+                    <td>{% if p.is_verified %}<span class="text-success">تأیید شده</span>{% else %}<span class="text-warning">در انتظار تأیید</span>{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">پرداختی یافت نشد.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav class="mt-3">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number|to_persian }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

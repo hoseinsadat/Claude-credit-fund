@@ -1,0 +1,32 @@
+{% extends "portal/base.html" %}
+{% load persian_tags %}
+
+{% block title %}اعلان‌ها{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">اعلان‌ها</h4>
+
+<div class="card">
+    {% for n in notifications %}
+    <div class="border-bottom p-3 {% if not n.is_read %}bg-light{% endif %}">
+        <div class="d-flex justify-content-between">
+            <strong>{{ n.title }}</strong>
+            <small class="text-muted">{{ n.created_at|to_jalali_full }}</small>
+        </div>
+        <p class="mb-0 mt-1 text-muted">{{ n.body }}</p>
+    </div>
+    {% empty %}
+    <div class="p-4 text-center text-muted">اعلانی یافت نشد.</div>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="mt-3">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number|to_persian }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>{% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

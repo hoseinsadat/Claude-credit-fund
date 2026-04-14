@@ -1,0 +1,68 @@
+{% extends "portal/base.html" %}
+{% load persian_tags %}
+
+{% block title %}ضمانت‌نامه {{ guarantee.guarantee_number }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>ضمانت‌نامه {{ guarantee.guarantee_number }}</h4>
+    <a href="{% url 'portal:guarantee-list' %}" class="btn btn-outline-secondary btn-sm">بازگشت</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card p-3 mb-3">
+            <h6>اطلاعات کلی</h6>
+            <table class="table table-sm">
+                <tr><td class="text-muted" style="width:35%">نوع ضمانت‌نامه</td><td>{{ guarantee.guarantee_type.name_fa }}</td></tr>
+                <tr><td class="text-muted">ذینفع</td><td>{{ guarantee.beneficiary.name }}</td></tr>
+                <tr><td class="text-muted">مبلغ</td><td>{{ guarantee.amount|rials_format }}</td></tr>
+                <tr><td class="text-muted">موضوع</td><td>{{ guarantee.purpose|default:"-" }}</td></tr>
+                <tr><td class="text-muted">تاریخ صدور</td><td>{{ guarantee.issue_date|to_jalali|default:"-" }}</td></tr>
+                <tr><td class="text-muted">تاریخ اعتبار</td><td>{{ guarantee.effective_date|to_jalali|default:"-" }}</td></tr>
+                <tr><td class="text-muted">تاریخ انقضا</td><td>{{ guarantee.expiry_date|to_jalali|default:"-" }}</td></tr>
+                <tr><td class="text-muted">تعداد تمدید</td><td>{{ guarantee.renewal_count|to_persian }}</td></tr>
+            </table>
+        </div>
+
+        <div class="card p-3 mb-3">
+            <h6>هزینه‌ها</h6>
+            <table class="table table-sm">
+                <thead><tr><th>نوع</th><th>مبلغ</th><th>سررسید</th><th>وضعیت</th></tr></thead>
+                <tbody>
+                {% for fee in guarantee.fee_schedules.all %}
+                <tr>
+                    <td>{{ fee.get_fee_type_display }}</td>
+                    <td>{{ fee.amount|rials_format }}</td>
+                    <td>{{ fee.due_date|to_jalali|default:"-" }}</td>
+                    <td>{% if fee.is_paid %}<span class="text-success">پرداخت شده</span>{% else %}<span class="text-danger">پرداخت نشده</span>{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-muted text-center">هزینه‌ای ثبت نشده است.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h6>وضعیت</h6>
+            <div class="text-center py-3">
+                <span class="badge-state fs-5" style="background:
+                    {% if guarantee.state == 'active' %}#10b981{% elif guarantee.state == 'draft' %}#6b7280{% elif guarantee.state == 'expired' %}#ef4444{% else %}#3b82f6{% endif %}
+                ">{{ guarantee.get_state_display }}</span>
+            </div>
+        </div>
+
+        <div class="card p-3">
+            <h6>اطلاعات مالی</h6>
+            <table class="table table-sm">
+                <tr><td class="text-muted">نرخ کارمزد</td><td>{{ guarantee.commission_rate }}</td></tr>
+                <tr><td class="text-muted">مبلغ کارمزد</td><td>{{ guarantee.commission_amount|rials_format }}</td></tr>
+                <tr><td class="text-muted">مبلغ سپرده</td><td>{{ guarantee.deposit_amount|rials_format }}</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
