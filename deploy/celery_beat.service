@@ -1,0 +1,23 @@
+[Unit]
+Description=Credit Fund Celery Beat Scheduler
+After=network.target redis-server.service postgresql.service
+
+[Service]
+Type=forking
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/credit_fund
+EnvironmentFile=/home/ubuntu/.env
+ExecStart=/home/ubuntu/venv/bin/celery \
+    -A config beat \
+    -l warning \
+    --scheduler django_celery_beat.schedulers:DatabaseScheduler \
+    --pidfile=/tmp/celery_beat.pid \
+    --logfile=/var/log/credit_fund/celery_beat.log \
+    --detach
+PIDFile=/tmp/celery_beat.pid
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
